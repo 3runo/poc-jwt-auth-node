@@ -1,6 +1,7 @@
+const jwt = require('jwt-simple')
+
 const User = require('../models/user')
 const config = require('../config')
-const jwt = require('jwt-simple')
 
 exports.signup = function signupAction (request, response, next) {
   const email = request.body.email
