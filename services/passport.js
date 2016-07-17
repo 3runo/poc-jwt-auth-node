@@ -1,4 +1,3 @@
-const passport = require('passport')
 const StrategyJwt = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const LocalPassport = require('passport-local')
@@ -56,6 +55,5 @@ const jwtLoginStrategy = new StrategyJwt(jwtLoginOptions, function jwtLoginDefin
   })
 })
 
-// Tell passport to use such passport strategies
-passport.use(jwtLoginStrategy)
-passport.use(localLoginStrategy)
+module.exports.jwtLoginStrategy = jwtLoginStrategy
+module.exports.localLoginStrategy = localLoginStrategy

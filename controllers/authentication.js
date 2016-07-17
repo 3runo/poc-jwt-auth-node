@@ -11,7 +11,7 @@ function jwtEncodeUserToken (user) {
   }, apiConfig.SECRET)
 }
 
-exports.signup = function signupAction (request, response, next) {
+module.exports.signup = function signupAction (request, response, next) {
   const email = request.body.email
   const password = request.body.password
 
@@ -47,7 +47,7 @@ exports.signup = function signupAction (request, response, next) {
   })
 }
 
-exports.signin = function signinAction (request, response, next) {
+module.exports.signin = function signinAction (request, response, next) {
   // request.user was binded by passport library.
   response.send({'token': jwtEncodeUserToken(request.user)})
 }
