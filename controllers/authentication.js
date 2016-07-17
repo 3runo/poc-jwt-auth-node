@@ -1,7 +1,15 @@
 const jwt = require('jwt-simple')
 
 const User = require('../models/user')
-const config = require('../config')
+const apiConfig = require('../config')
+
+function jwtEncodeUserToken (user) {
+  const timestamp = new Date().getTime()
+  return jwt.encode({
+    sub: user.id,
+    ait: timestamp
+  }, apiConfig.SECRET)
+}
 
 exports.signup = function signupAction (request, response, next) {
   const email = request.body.email
@@ -11,8 +19,11 @@ exports.signup = function signupAction (request, response, next) {
     response.status(422).send({'error': 'You must provide email and password.'})
   }
 
-  // Mongo query
-  User.findOne({email: email}, function whenFindEnds (err, userFound) {
+  // MongoDB query
+  // Looks for existent request
+  // Creates a new one, save in MongoDB
+  // Returns a JWT token
+  User.findOne({email: email}, function findOneCallBack (err, userFound) {
     if (err) {
       return next(err)
     }
@@ -21,29 +32,22 @@ exports.signup = function signupAction (request, response, next) {
       response.status(422).send({'error': 'Email is in use.'})
     }
 
-    const user = new User({
+    const newUser = new User({
       email: email,
       password: password
     })
 
-    user.save(function onSavePersistence (err) {
+    newUser.save(function onSavePersistence (err) {
       if (err) {
         return next(err)
       }
 
-      response.send({'token': jwtEncodeUserToken(user)})
+      response.send({'token': jwtEncodeUserToken(newUser)})
     })
   })
 }
 
-function jwtEncodeUserToken (user) {
-  const timestamp = new Date().getTime()
-  return jwt.encode({
-    sub: user.id,
-    ait: timestamp
-  }, config.API_SECRET)
+exports.signin = function signinAction (request, response, next) {
+  // request.user was binded by passport library.
+  response.send({'token': jwtEncodeUserToken(request.user)})
 }
-
-// exports.signup = function signinAction (request, response, next) {
-//   response.send('signinAction')
-// }

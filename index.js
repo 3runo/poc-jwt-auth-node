@@ -6,17 +6,17 @@ const mongoose = require('mongoose')
 
 const router = require('./router')
 
-// DB setup
+// Mongo DB Setup
 mongoose.connect('mongodb://localhost:authentication/authentication')
 
-// App setup
+// Node App setup
 const app = express()
 
 app.use(morgan('combined'))
 app.use(bodyParser.json({type: '*/*'}))
 router(app)
 
-// Server setup
+// Local Server setup
 const port = process.env.PORT || 3000
 const server = http.createServer(app)
 
