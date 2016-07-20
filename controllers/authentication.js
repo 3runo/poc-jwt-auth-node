@@ -16,7 +16,7 @@ module.exports.signup = function signupAction (request, response, next) {
   const password = request.body.password
 
   if (!email || !password) {
-    response.status(422).send({'error': 'You must provide email and password.'})
+    response.status(422).send({'message': 'You must provide email and password.'})
   }
 
   // MongoDB query
@@ -29,7 +29,7 @@ module.exports.signup = function signupAction (request, response, next) {
     }
 
     if (userFound) {
-      response.status(422).send({'error': 'Email is in use.'})
+      response.status(422).send({'message': 'Email is in use.'})
     }
 
     const newUser = new User({
